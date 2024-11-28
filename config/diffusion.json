@@ -1,0 +1,55 @@
+{
+    "model.use_xyz": true,
+    "in_fea_dim": 0,
+    "out_dim": 3,
+    "include_t": true,
+    "t_dim": 128,
+    "attach_position_to_input_feature": true,
+    "include_abs_coordinate": true,
+    "bn_first": true,
+    "bias": true,
+    "res_connect": true,
+    "include_class_condition": true,
+    "num_class": 1,
+    "class_condition_dim": 1024,
+    "scale_factor": 1,
+    "architecture": {
+        "npoint": [
+            1024,
+            256,
+            64,
+            16
+        ],
+        "radius": [
+            0.1,
+            0.2,
+            0.4,
+            0.8
+        ],
+        "nsample": [
+            32,
+            32,
+            32,
+            32
+        ],
+        "feature_dim": [
+            32,
+            64,
+            128,
+            256,
+            512
+        ],
+        "mlp_depth": 3,
+        "decoder_feature_dim": [
+            128,
+            128,
+            256,
+            256,
+            512
+        ],
+        "decoder_mlp_depth": 2
+    },
+    "use_knn_FP": true,
+    "K": 3,
+    "record_neighbor_stats": false
+}

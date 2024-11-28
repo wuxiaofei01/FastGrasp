@@ -1,0 +1,50 @@
+{
+    "file_name" : "adapt",
+    "seed": 0,
+    "epochs": 500,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "use_cuda": 1,
+    "dataloader_workers": 16,
+    "train_mode": "TrainVal",
+    "dataset": "oakink",
+    "mano": "oakink",
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "adapt_layer": {
+        "layer_sizes": [
+            768,
+            2048,
+            1024,
+            768
+        ],
+        "latent_size": 768,
+        "conditional": true,
+        "condition_size": 1024,
+        "intention":false
+    },
+    "weight": [
+        1,
+        10,
+        1000,
+        5,
+        10
+    ],
+    "intention":false,
+    "model_type": "LLM",
+    "obj_inchannel": 4,
+    "autoencoder_path": "checkpoints/ae.pth",
+    "diffusion_path": "checkpoints/diffusion.pth",
+    "diffusion_config": "config/diffusion.json",
+    "other":"RTX:256 "
+}

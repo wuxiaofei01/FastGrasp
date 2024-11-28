@@ -1,0 +1,40 @@
+{
+    "seed": 43,
+    "guide_w" : 2 ,
+    "batch_size": 1,
+    "use_cuda": 1,
+    "dataloader_workers": 8,
+    "ddim_step" : 20,
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "adapt_layer": {
+        "layer_sizes": [
+            768,
+            2048,
+            1024,
+            768
+        ],
+        "latent_size": 768,
+        "conditional": true,
+        "condition_size": 1024
+    },
+    "obj_id":[3, 4, 6, 10, 11, 19, 21, 25, 35, 37],
+    "penetr_vol_thre":4e-6,
+    "simu_disp_thre":0.03,
+    "obj_inchannel": 4,
+    "intention" :false,
+    "diffusion_config": "config/diffusion.json",
+    "autoencoder_path": "checkpoints/best_ae.pth",
+    "diffusion_path": "checkpoints/best_diff.pth",
+    "adapt_path": "checkpoints/best_adapt.pth"
+}

@@ -1,0 +1,28 @@
+{
+    "file_name": "oakink",
+    "seed": 0,
+    "epochs": 1000,
+    "batch_size": 64,
+    "learning_rate": 0.0001,
+    "use_cuda": 1,
+    "dataloader_workers": 16,
+    "train_mode": "TrainVal",
+    "dataset": "oakink",
+    "mano": "oakink",
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "intention": false,
+    "model_type": "LLM",
+    "obj_inchannel": 4,
+    "autoencoder_path": "checkpoints/ae.pth"
+}

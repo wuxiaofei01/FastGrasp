@@ -1,0 +1,36 @@
+{
+    "file_name": "ae",
+    "seed": 0,
+    "epochs": 1000,
+    "batch_size": 256,
+    "learning_rate": 0.0001,
+    "figs": "figs",
+    "use_cuda": 1,
+    "dataloader_workers": 16,
+    "train_mode": "TrainVal",
+    "dataset": "grab",
+    "aug_ratio" : 0,
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "obj_inchannel": 4,
+    "model_type": "LLM",
+    "loss_type": "CD",
+    "weight": [
+        10,
+        10,
+        100,
+        10,
+        10,
+        1e-4
+    ]
+}

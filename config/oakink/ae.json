@@ -1,0 +1,37 @@
+{
+    "file_name":"ae",
+    "seed": 0,
+    "epochs": 1000,
+    "batch_size": 128,
+    "learning_rate": 0.0001,
+    "use_cuda": 1,
+    "dataloader_workers": 16,
+    "train_mode": "TrainValTest",
+    "dataset": "oakink",
+    "mano":"oakink",
+    "intention" :false,
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "obj_inchannel": 4,
+    "model_type": "LLM",
+    "loss_type": "CD",
+    "weight": [
+        1.0,
+        0.1,
+        1000.0,
+        10.0,
+        10.0,
+        0
+    ],
+    "other":"a40:1024,ae"
+}

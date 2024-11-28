@@ -1,0 +1,35 @@
+{
+    "file_name" : "grab",
+    "seed": 0,
+    "epochs": 1000,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "use_cuda": 1,
+    "dataloader_workers": 16,
+    "train_mode": "TrainVal",
+    "dataset": "grab",
+    "mano" :"grab",
+    "aug_ratio" : 10,
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "unet": {
+        "seq_len": 768,
+        "dim": 192,
+        "dim_max": 768,
+        "num_classes": 1024
+    },
+    "intention":false,
+    "obj_inchannel": 4,
+    "autoencoder_path": "/public/home/v-wuxf/CVPR/GraspTTA/affordance-CVAE/logs2/LLM/autoencoder/grab/61-1/model_best_train.pth",
+    "other":"RTX 128,A40 256"
+}

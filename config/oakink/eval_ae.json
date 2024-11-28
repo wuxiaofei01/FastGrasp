@@ -1,0 +1,25 @@
+{
+    "seed": 0,
+    "batch_size": 1,
+    "use_cuda": 1,
+    "dataloader_workers": 1,
+    "train_mode": "Test",
+    "dataset": "oakink",
+    "mano": "oakink",
+    "encoder_layer_sizes": [
+        1024,
+        2048,
+        1024,
+        768
+    ],
+    "decoder_layer_sizes": [
+        2048,
+        1024,
+        256,
+        61
+    ],
+    "intention" :false,
+    "obj_inchannel": 4,
+    "loss_type": "CD",
+    "model_path" : "checkpoints/ae.pth"
+}
