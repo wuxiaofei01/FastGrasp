@@ -77,7 +77,7 @@ If you find that the installation of pytorch3d fails, please refer to the [link]
 
 * maybe your cuda(nvcc) is not supported , 11.4 is in compliance with the version requirementsis
 
-Get the [MANO hand model](https://github.com/oakink/OakInk/blob/main/docs/install.md#get-mano-asset):
+Get the [MANO hand model](https://mano.is.tue.mpg.de/):
 
 ```bash
 cp -r {path_to}/mano_v1_2 ./assets
