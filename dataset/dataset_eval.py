@@ -19,11 +19,11 @@ class Oakink():
         self.args = args
         self.mode = mode
 
-        self.obj_pc_path = '/public/home/v-wuxf/CVPR/GraspTTA/affordance-CVAE/hand-object-3/download/dataset/ObMan/obman/precessed/obj_pc_{}.npy'.format(mode)
-        self.hand_param_path = '/public/home/v-wuxf/CVPR/GraspTTA/affordance-CVAE/hand-object-3/download/dataset/ObMan/obman/precessed/hand_param_{}.npy'.format(mode)
+        self.obj_pc_path = 'data/precessed/obj_pc_{}.npy'.format(mode)
+        self.hand_param_path = 'data/precessed/hand_param_{}.npy'.format(mode)
         
-        self.obj_faces_path = "/public/home/v-wuxf/CVPR/GraspTTA/affordance-CVAE/hand-object-3/download/dataset/ObMan/obman/evaluation/obj_faces_{}.npy".format(mode)
-        self.obj_verts_path = "/public/home/v-wuxf/CVPR/GraspTTA/affordance-CVAE/hand-object-3/download/dataset/ObMan/obman/evaluation/obj_verts_{}.npy".format(mode)
+        self.obj_faces_path = "data/evaluation/obj_faces_{}.npy".format(mode)
+        self.obj_verts_path = "data/evaluation/obj_verts_{}.npy".format(mode)
 
 
 
@@ -171,19 +171,8 @@ class Grab(data.Dataset):
 
         obj_mesh = trimesh.Trimesh(vertices=obj_verts, faces=obj_faces)
         
-        # import ipdb
-        # import open3d as o3d
-        # hand_mesh = o3d.geometry.TriangleMesh()
-        # hand_mesh.triangles = o3d.utility.Vector3iVector(self.hand_faces)#画边
-        # hand_mesh.vertices = o3d.utility.Vector3dVector(hand_verts)#画顶点
-        # hand_mesh.vertex_colors = o3d.utility.Vector3dVector(
-        #     np.array([[0.4, 0.81960784, 0.95294118]] * len(np.asarray(hand_verts))))
 
-        # hand_cloud = hand_mesh.sample_points_uniformly(number_of_points=100000)
-
-        # o3d.io.write_point_cloud("hand_0.ply", hand_cloud)
         
-        """获取得到obj_pc"""
         obj_xyz_normalized, face_id = trimesh.sample.sample_surface(obj_mesh, 3000)
         obj_xyz_normalized = obj_xyz_normalized[:3000, :]  # [3000, 3]
         obj_pose = np.eye(4)
@@ -194,59 +183,11 @@ class Grab(data.Dataset):
         obj_pc = torch.cat((obj_xyz_transformed, obj_scale_tensor), dim=-1)  # [3000, 4]
         obj_pc = obj_pc.permute(1, 0)  # [4, 3000]
 
-        '''
-        将grab数据集转换为param51 , rot - > param
-        handrot : [ 16 , 3 , 3]
-        th_trans : [3]
-        只需要找到 旋转矩阵和旋转角之间的映射关系就行
-        '''
+
         handrot_param48 = torch.tensor(self.convert_rotmat_to_euler(handrot.to("cpu")) , dtype = torch.float32).reshape(1, -1)   # [B , 48]  totmat -> euler
         hand_param = torch.cat((handrot_param48 , th_trans),dim = -1).squeeze(0)
 
-        '''测试使用矩阵逆运算,精度是否能接受.通过可视化查看'''
 
-        # hand_param = torch.cat((handrot_param48 , th_trans),dim = -1)
-        # handeuler = hand_param[:, :48].view(-1,16,3)  # [ B , 16 , 3 ]
-        # handrot = self.convert_euler_to_rotmat(handeuler)# [ B , 16 , 3 , 3]
-        # th_trans =hand_param[:, 48:] # [ B , 3]
-        # hand_verts, hand_frames = self.mano_layer(handrot, th_trans=th_trans, th_v_template=th_v_template)
-
-        '''
-        查看逆运算是否成功
-        由于精度误差关系,导致有些出入.
-        '''
-        # recon_handrot = self.convert_euler_to_rotmat(handrot_param48.reshape(1,16,3)) # [1 , 16 , 3 , 3]
-        # difference = torch.abs(recon_handrot - handrot)
-        # tolerance = 5e6
-        # if difference.max() < tolerance:
-        #     print("The two tensors are effectively the same.")
-        # else:
-        #     print("The two tensors are not exactly the same.")
-        # exit()
-
-
-
-        """可视化手 + 物体
-        import ipdb
-        import open3d as o3d
-        ipdb.set_trace() # 可视化物体点云
-
-
-        point_cloud = o3d.geometry.PointCloud()
-        point_cloud.points = o3d.utility.Vector3dVector(obj_verts)
-        o3d.io.write_point_cloud("obj.ply", point_cloud)
-        hand_verts = hand_verts.squeeze(0)
-
-        hand_mesh = o3d.geometry.TriangleMesh()
-        hand_mesh.triangles = o3d.utility.Vector3iVector(self.hand_faces)#画边
-        hand_mesh.vertices = o3d.utility.Vector3dVector(hand_verts)#画顶点
-        hand_mesh.vertex_colors = o3d.utility.Vector3dVector(
-            np.array([[0.4, 0.81960784, 0.95294118]] * len(np.asarray(hand_verts))))
-
-        hand_cloud = hand_mesh.sample_points_uniformly(number_of_points=100000)
-
-        o3d.io.write_point_cloud("hand_1.ply", hand_cloud)
-        """
         
         return {
             "obj_pc": obj_pc,
@@ -325,30 +266,30 @@ class GrabTest(data.Dataset):
 
         return rotmat_torch
     def __getitem__(self, item): 
-        obj_name = self.frame_objs[item] #item = 54   , fframe_objs['cup', 'cylindersmall', 'train', 'spheresmall', 'stapler',...]  由于shuffle，打乱顺序
-        obj_mesh_path = os.path.join(self.obj_root, obj_name + '.ply')# 'grab_data/obj_meshes/cubelarge.ply' 获取得到目标的ply文件位置
-        obj_mesh = trimesh.load(obj_mesh_path, file_type="ply")# 获取得到mesh 
-        obj_faces = obj_mesh.faces# 得到mesh的faces
+        obj_name = self.frame_objs[item] 
+        obj_mesh_path = os.path.join(self.obj_root, obj_name + '.ply')
+        obj_mesh = trimesh.load(obj_mesh_path, file_type="ply")
+        obj_faces = obj_mesh.faces
 
         rot_mat = self.ds["root_orient_obj_rotmat"][item].numpy().reshape(3, 3)
         transl = self.ds["trans_obj"][item].numpy()
-        obj_verts = obj_mesh.vertices @ rot_mat + transl # 获取得到 verts ，上述应该是数据增广？
+        obj_verts = obj_mesh.vertices @ rot_mat + transl 
         offset = obj_verts.mean(axis=0, keepdims=True)
         obj_verts = obj_verts - offset
 
 
         sbj_idx = self.frame_sbjs[item] # tensor(4)
-        v_template = self.sbj_vtemp[sbj_idx] # [778,3] 这里应该是获取得到手的参数
+        v_template = self.sbj_vtemp[sbj_idx] 
 
         global_orient = self.ds['global_orient_rhand_rotmat'][item]
         rhand_rotmat = self.ds['fpose_rhand_rotmat'][item]
 
-        handrot = torch.cat([global_orient, rhand_rotmat], dim=0).unsqueeze(dim=0)# 获取方位信息
+        handrot = torch.cat([global_orient, rhand_rotmat], dim=0).unsqueeze(dim=0)
 
         th_trans = self.ds['trans_rhand'][item].unsqueeze(dim=0) - torch.FloatTensor(offset)
         th_v_template = v_template.unsqueeze(dim=0)
 
-        hand_verts, hand_frames = self.mano_layer(handrot, th_trans=th_trans, th_v_template=th_v_template)  # 需要知道handrot,th_trans,th_v_template
+        hand_verts, hand_frames = self.mano_layer(handrot, th_trans=th_trans, th_v_template=th_v_template) 
 
         obj_verts = obj_verts @ rot_mat.T
         global_orient = torch.from_numpy(rot_mat).float() @ global_orient
@@ -374,19 +315,7 @@ class GrabTest(data.Dataset):
 
         obj_mesh = trimesh.Trimesh(vertices=obj_verts, faces=obj_faces)
         
-        # import ipdb
-        # import open3d as o3d
-        # hand_mesh = o3d.geometry.TriangleMesh()
-        # hand_mesh.triangles = o3d.utility.Vector3iVector(self.hand_faces)#画边
-        # hand_mesh.vertices = o3d.utility.Vector3dVector(hand_verts)#画顶点
-        # hand_mesh.vertex_colors = o3d.utility.Vector3dVector(
-        #     np.array([[0.4, 0.81960784, 0.95294118]] * len(np.asarray(hand_verts))))
 
-        # hand_cloud = hand_mesh.sample_points_uniformly(number_of_points=100000)
-
-        # o3d.io.write_point_cloud("hand_0.ply", hand_cloud)
-        
-        """获取得到obj_pc"""
         obj_xyz_normalized, face_id = trimesh.sample.sample_surface(obj_mesh, 3000)
         obj_xyz_normalized = obj_xyz_normalized[:3000, :]  # [3000, 3]
         obj_pose = np.eye(4)
@@ -397,59 +326,10 @@ class GrabTest(data.Dataset):
         obj_pc = torch.cat((obj_xyz_transformed, obj_scale_tensor), dim=-1)  # [3000, 4]
         obj_pc = obj_pc.permute(1, 0)  # [4, 3000]
 
-        '''
-        将grab数据集转换为param51 , rot - > param
-        handrot : [ 16 , 3 , 3]
-        th_trans : [3]
-        只需要找到 旋转矩阵和旋转角之间的映射关系就行
-        '''
+
         handrot_param48 = torch.tensor(self.convert_rotmat_to_euler(handrot.to("cpu")) , dtype = torch.float32).reshape(1, -1)   # [B , 48]  totmat -> euler
         hand_param = torch.cat((handrot_param48 , th_trans),dim = -1).squeeze(0)
 
-        '''测试使用矩阵逆运算,精度是否能接受.通过可视化查看'''
-
-        # hand_param = torch.cat((handrot_param48 , th_trans),dim = -1)
-        # handeuler = hand_param[:, :48].view(-1,16,3)  # [ B , 16 , 3 ]
-        # handrot = self.convert_euler_to_rotmat(handeuler)# [ B , 16 , 3 , 3]
-        # th_trans =hand_param[:, 48:] # [ B , 3]
-        # hand_verts, hand_frames = self.mano_layer(handrot, th_trans=th_trans, th_v_template=th_v_template)
-
-        '''
-        查看逆运算是否成功
-        由于精度误差关系,导致有些出入.
-        '''
-        # recon_handrot = self.convert_euler_to_rotmat(handrot_param48.reshape(1,16,3)) # [1 , 16 , 3 , 3]
-        # difference = torch.abs(recon_handrot - handrot)
-        # tolerance = 5e6
-        # if difference.max() < tolerance:
-        #     print("The two tensors are effectively the same.")
-        # else:
-        #     print("The two tensors are not exactly the same.")
-        # exit()
-
-
-
-        """可视化手 + 物体
-        import ipdb
-        import open3d as o3d
-        ipdb.set_trace() # 可视化物体点云
-
-
-        point_cloud = o3d.geometry.PointCloud()
-        point_cloud.points = o3d.utility.Vector3dVector(obj_verts)
-        o3d.io.write_point_cloud("obj.ply", point_cloud)
-        hand_verts = hand_verts.squeeze(0)
-
-        hand_mesh = o3d.geometry.TriangleMesh()
-        hand_mesh.triangles = o3d.utility.Vector3iVector(self.hand_faces)#画边
-        hand_mesh.vertices = o3d.utility.Vector3dVector(hand_verts)#画顶点
-        hand_mesh.vertex_colors = o3d.utility.Vector3dVector(
-            np.array([[0.4, 0.81960784, 0.95294118]] * len(np.asarray(hand_verts))))
-
-        hand_cloud = hand_mesh.sample_points_uniformly(number_of_points=100000)
-
-        o3d.io.write_point_cloud("hand_1.ply", hand_cloud)
-        """
         
         return {
             "obj_pc": obj_pc,

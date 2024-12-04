@@ -8,6 +8,7 @@
     "guide_w" : 0.5,
     "ddim_step" :50,
     "mano": "oakink",
+    "sample" :"ddpm",
     "encoder_layer_sizes": [
         1024,
         2048,
