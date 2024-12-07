@@ -160,11 +160,11 @@ python eval_ho3d.py --config config/grab/ho3d.json
 ### Evaluation autoencoder module
 ####  Grab dataset
 ```bash
-python eval_ae.py --config config/grab/eval_adapt.json  
+python eval_ae.py --config config/grab/eval.json  
 ```
 ####  Oakink dataset
 ```bash
-python eval_ae.py --config config/oakink/eval_adapt.json  
+python eval_ae.py --config config/oakink/eval.json  
 ```
 
 
