@@ -69,7 +69,7 @@ cd manotorch
 pip install .
 cd ..
 git clone https://github.com/SLIDE-3D/SLIDE.git
-cd SLIDE/popointnet2_ops_lib
+cd SLIDE/pointnet2_ops_lib
 pip install -e .
 ```
 
