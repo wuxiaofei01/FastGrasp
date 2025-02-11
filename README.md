@@ -207,7 +207,7 @@ python train_diffusion.py --config config/oakink/diffusion.json
 python train_adapt.py --config config/oakink/adapt.json
 ```
 ### Grab-Dataset training
-**Autoencoder** model on the OakInk-Shape `train` set:
+**Autoencoder** model on the Grab `train` set:
 
 ```bash
 # train autoencoder model 
