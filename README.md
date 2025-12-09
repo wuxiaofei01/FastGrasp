@@ -228,10 +228,13 @@ You need to set the `file_name` in the json file, which is the path where your l
 If you find FastGrasp useful for your research, please considering cite us:
 
 ```bibtex
-@inproceedings{Wu2024FastGraspEG,
-  title={FastGrasp: Efficient Grasp Synthesis with Diffusion},
-  author={Xiaofei Wu and Tao Liu and Caoji Li and Yuexin Ma and Yujiao Shi and Xuming He},
-  year={2024},
-  url={https://api.semanticscholar.org/CorpusID:274192568}
+@misc{wu2024fastgraspefficientgraspsynthesis,
+      title={FastGrasp: Efficient Grasp Synthesis with Diffusion}, 
+      author={Xiaofei Wu and Tao Liu and Caoji Li and Yuexin Ma and Yujiao Shi and Xuming He},
+      year={2024},
+      eprint={2411.14786},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2411.14786}, 
 }
 ```
